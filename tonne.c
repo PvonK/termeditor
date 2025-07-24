@@ -1,3 +1,5 @@
+#include <ctype.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <termios.h>
 #include <unistd.h>
@@ -36,7 +38,15 @@ int main(){
     enableTermRawMode();
 
     char c;
-    while (read(STDIN_FILENO, &c, 1) == 1 && c != 'q');
+    while (read(STDIN_FILENO, &c, 1) == 1 && c != 'q'){
+        // print the value of the c byte
+        if (iscntrl(c)){
+            printf("%d\n", c);
+        }else{
+            // if its not a control character print its byte representation too
+            printf("%d ('%c')\n", c, c);
+        }
+    }
 
     return 0;
 }
