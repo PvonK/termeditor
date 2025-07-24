@@ -24,8 +24,10 @@ void enableTermRawMode(){
 
     // ECHO is a bitflag, defined as 00000000000000000000000000001000 in binary. We use the bitwise-NOT operator (~) on this value to get 11111111111111111111111111110111. We then bitwise-AND this value with the flags field, which forces the fourth bit in the flags field to become 0, and causes every other bit to retain its current value.
     // We set the echo flag to 0 on "raw"
-    // We also set the ICANON flag to 0 to disable canonnical mode and process the keys without the neef to press return
-    raw.c_lflag &= ~(ECHO | ICANON);
+    // We also set the ICANON flag to 0 to disable canonnical mode and process the keys without the need to press return
+    // We also set the ISIG flag to 0 to disable CTRL-C and CTRL-Z
+    // TODO (in the future I might want to keep CTRL-Z like vim does)
+    raw.c_lflag &= ~(ECHO | ICANON | ISIG);
 
     // Sets the new flag to the terminal
     // TCSAFLUSH argument specifies when to apply the change: in this case, it waits for all pending output to be written to the terminal, and also discards any input that hasn’t been read.
