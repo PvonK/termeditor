@@ -29,6 +29,10 @@ void enableTermRawMode(){
     // TODO (in the future I might want to keep CTRL-Z like vim does)
     raw.c_lflag &= ~(ECHO | ICANON | ISIG);
 
+    // We now use input flags (iflag)
+    // We disable the IXON flag to turn off CTRL-S and CTRL-Q
+    raw.c_iflag &= ~(IXON);
+
     // Sets the new flag to the terminal
     // TCSAFLUSH argument specifies when to apply the change: in this case, it waits for all pending output to be written to the terminal, and also discards any input that hasn’t been read.
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
