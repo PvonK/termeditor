@@ -32,7 +32,8 @@ void enableTermRawMode(){
 
     // We now use input flags (iflag)
     // We disable the IXON flag to turn off CTRL-S and CTRL-Q
-    raw.c_iflag &= ~(IXON);
+    // we also unset the ICRNL flag that turns a carriage return into newline
+    raw.c_iflag &= ~(ICRNL | IXON);
 
     // Sets the new flag to the terminal
     // TCSAFLUSH argument specifies when to apply the change: in this case, it waits for all pending output to be written to the terminal, and also discards any input that hasn’t been read.
