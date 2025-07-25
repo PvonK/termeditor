@@ -108,6 +108,16 @@ void processKeypress(){
 }
 
 
+/*** Output ***/
+void refreshScreen(){
+    // We wri¿ite 4 bytes to the STDOUT
+    // we send an escape sequence ('\x1b' followed by '[')
+    // The escape sequence we send is 'J' that is for clearing the screen
+    // We send it with the argument '2' which means clear the whole screen
+    write(STDOUT_FILENO, "\x1b[2J", 4);
+}
+
+
 /*** Init ***/
 
 int main(){
@@ -115,6 +125,7 @@ int main(){
 
     // while always
     while (1){
+        refreshScreen();
         processKeypress();
     }
 
