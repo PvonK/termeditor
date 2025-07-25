@@ -1,3 +1,4 @@
+#include <errno.h>
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,13 +15,18 @@ void die(const char *s){
 }
 
 void disableTermRawMode(){
-    tcsetattr(STDIN_FILENO, TCSAFLUSH, &original_termios);
+    // We try to reset the flags to their original value to reset 'raw' mode
+    // If we get an error we end the program with exit status = 1
+    if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &original_termios) == -1){
+        die("tcsetattr");
+    }
 }
 
 void enableTermRawMode(){
 
     // Check the value of the flags on the terminal and save them on the "original_termios" struct
-    tcgetattr(STDIN_FILENO, &original_termios);
+    // If we get an error we end the program
+    if (tcgetattr(STDIN_FILENO, &original_termios) == -1) die("tcgetattr");
 
     // Register "disableTermRawMode" to always run on exit
     atexit(disableTermRawMode);
@@ -61,7 +67,8 @@ void enableTermRawMode(){
 
     // Sets the new flags to the terminal
     // TCSAFLUSH argument specifies when to apply the change: in this case, it waits for all pending output to be written to the terminal, and also discards any input that hasn’t been read.
-    tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
+    // If tcsetattr() fails and returns -1 we end the program with an error
+    if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == -1) die("tcsetattr");
 
 }
 
@@ -73,7 +80,8 @@ int main(){
     while (1){
         char c = '\0'; // TODO answer these: what is \0? no character? empty byte? Why does it have to be single quotes? // We set c to an empty byte ¿?
         // We read STDIN q byte at a time and set the c variable to the value read
-        read(STDIN_FILENO, &c, 1);
+        // If read fails and it is not because of the timeout we set (timeout fails set errno var to EAGAIN) we kill the program
+        if (read(STDIN_FILENO, &c, 1) == -1 && errno != EAGAIN) die("read");
         // print the value of the c byte
         if (iscntrl(c)){
             printf("%d\n", c);
