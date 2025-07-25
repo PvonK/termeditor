@@ -27,7 +27,8 @@ void enableTermRawMode(){
     // We also set the ICANON flag to 0 to disable canonnical mode and process the keys without the need to press return
     // We also set the ISIG flag to 0 to disable CTRL-C and CTRL-Z
     // TODO (in the future I might want to keep CTRL-Z like vim does)
-    raw.c_lflag &= ~(ECHO | ICANON | ISIG);
+    // Also unset IEXTEN
+    raw.c_lflag &= ~(ECHO | ICANON | ISIG | IEXTEN);
 
     // We now use input flags (iflag)
     // We disable the IXON flag to turn off CTRL-S and CTRL-Q
