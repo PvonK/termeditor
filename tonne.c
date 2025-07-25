@@ -1,3 +1,4 @@
+/*** Includes ***/
 #include <errno.h>
 #include <ctype.h>
 #include <stdio.h>
@@ -6,7 +7,12 @@
 #include <unistd.h>
 
 
+/*** Data ***/
+
 struct termios original_termios;
+
+
+/*** Terminal configuration ***/
 
 // Exit function. Prints the error message and exits with code 1
 void die(const char *s){
@@ -73,6 +79,8 @@ void enableTermRawMode(){
 }
 
 
+/*** Init ***/
+
 int main(){
     enableTermRawMode();
 
@@ -101,4 +109,4 @@ int main(){
 
 // - [ ] Check what a struct is
 // - [ ] Check what & before the struct name is for
-// - [ ] Check why we put parenthesis on ECHO to do the bitwise NOT
+// - [ ] Check why we put parenthesis on the flags (Even when we have only 1 flag and not doing operations between many) to do the bitwise NOT
