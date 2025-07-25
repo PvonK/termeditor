@@ -117,6 +117,16 @@ void processKeypress(){
 
 
 /*** Output ***/
+
+void drawRows(){
+    int y;
+    // For 24 rows we write a tilde at the start of the line
+    for (y=0;y<24;y++){
+        write(STDOUT_FILENO, "~\r\n", 3);
+    }
+}
+
+
 void refreshScreen(){
     // We write 4 bytes to the STDOUT
     // we send an escape sequence ('\x1b' (escape character) followed by '[')
@@ -128,6 +138,11 @@ void refreshScreen(){
     // we write an escape sequence followed by the H byte
     // The H byte on the escape sequence is for setting the cursor position. It takes 2 args, we dont use any to set it to 1,1
     write(STDOUT_FILENO, "\x1b[H", 3);
+
+    drawRows();
+    // We reset the cursor after drawing the lines
+    write(STDOUT_FILENO, "\x1b[H", 3);
+
 }
 
 
