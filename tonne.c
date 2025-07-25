@@ -127,12 +127,13 @@ int getCursorPosition(int *rows, int *cols){
     }
     // we set the last read byte to 0 so print interprets it as the end of a string
     buf[i] = '\0';
-    // We print the bytes on the buffer after the first one
-    printf("\r\n&buf[1]: '%s'\r\n", &buf[1]);
 
+    // If what we read is not an escape sequence, we return an error
+    if (buf[0] != '\x1b' || buf[1] != '[') return -1;
+    // We use sscanf to read the size values that are in the format rrr;ccc, if we dont read 2 bytes we return an error
+    if (sscanf(&buf[2], "%d;%d", rows, cols) !=2) return -1;
 
-    readKey();
-    return -1;
+    return 0;
 }
 
 
