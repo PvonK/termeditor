@@ -111,20 +111,26 @@ char readKey(){
 
 
 int getCursorPosition(int *rows, int *cols){
+    char buf[32];
+    unsigned int i = 0;
     // We write an escape sequence ('\x1b[') that queries the terminal status info ('n')
     // We specifically ask for cursor position (argument '6')
     if (write(STDOUT_FILENO, "\x1b[6n", 4) != 4) return -1;
 
-    printf("\r\n");
-    char c;
-    // We read the response on stdin
-    while (read(STDIN_FILENO, &c, 1) == 1){
-        if (iscntrl(c)){
-            printf("%d\r\n", c);
-        }else{
-            printf("%d ('%c')\r\n", c, c);
-        }
+    // For the length of the buffer
+    while (i<sizeof(buf)-1){
+        // Read one byte of the buffer
+        if (read(STDIN_FILENO, &buf[i], 1) != 1) break;
+        // When we find the R byte at the end of the message we are looking for, we exit
+        if (buf[i] == 'R') break;
+        i++;
     }
+    // we set the last read byte to 0 so print interprets it as the end of a string
+    buf[i] = '\0';
+    // We print the bytes on the buffer after the first one
+    printf("\r\n&buf[1]: '%s'\r\n", &buf[1]);
+
+
     readKey();
     return -1;
 }
@@ -224,3 +230,5 @@ int main(){
 // - [ ] Check why we put parenthesis on the flags (Even when we have only 1 flag and not doing operations between many) to do the bitwise NOT
 //        > Might just be the way to state that we are using the variable to do bitwise operations, since we do the same thing with (k) & 0x1f
 // - [ ] Search the difference between a function and a macro defined with '#define'
+// - [ ] Search for the difference between 'R' and "R", and '\0' and "\0"
+//        > From the error message it seems '' is for chars and "" is read as an int
