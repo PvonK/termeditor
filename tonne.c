@@ -110,11 +110,16 @@ void processKeypress(){
 
 /*** Output ***/
 void refreshScreen(){
-    // We wri¿ite 4 bytes to the STDOUT
-    // we send an escape sequence ('\x1b' followed by '[')
+    // We write 4 bytes to the STDOUT
+    // we send an escape sequence ('\x1b' (escape character) followed by '[')
     // The escape sequence we send is 'J' that is for clearing the screen
     // We send it with the argument '2' which means clear the whole screen
     write(STDOUT_FILENO, "\x1b[2J", 4);
+
+    // We write 3 bytes to stdout
+    // we write an escape sequence followed by the H byte
+    // The H byte on the escape sequence is for setting the cursor position. It takes 2 args, we dont use any to set it to 1,1
+    write(STDOUT_FILENO, "\x1b[H", 3);
 }
 
 
