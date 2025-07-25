@@ -148,8 +148,8 @@ void processKeypress(){
 
 void drawRows(){
     int y;
-    // For 24 rows we write a tilde at the start of the line
-    for (y=0;y<24;y++){
+    // For all rows we write a tilde at the start of the line
+    for (y=0;y<E.screenrows;y++){
         write(STDOUT_FILENO, "~\r\n", 3);
     }
 }
