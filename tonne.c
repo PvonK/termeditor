@@ -7,6 +7,12 @@
 
 struct termios original_termios;
 
+// Exit function. Prints the error message and exits with code 1
+void die(const char *s){
+    perror(s);
+    exit(1);
+}
+
 void disableTermRawMode(){
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &original_termios);
 }
@@ -42,7 +48,7 @@ void enableTermRawMode(){
     // We unset the OPOST flag to disable newline input into carriage return + newline translation
     raw.c_oflag &= ~(OPOST);
 
-    // we run an or operator on the CS8 bit mask to set the character size to 8 bits per byte. It is normally already set (TODO research when it is useful to have bytes that arent 8 bits ¿?)
+    // we run an or operator on the CS8 bit mask to set the character size to 8 bits per byte. It is normally already set (TODO research when it is useful to have bytes that arent 8 bits > Bytes correspond to the syze of your character set, not necessarily always 8 bits. I should research if this is a relatively high level consideration since at the low level bytes are *physically* 8 bits)
     raw.c_cflag |= (CS8);
 
     // We set the minimum number of bytes that 'read()' needs to read before it returns
