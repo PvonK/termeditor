@@ -56,7 +56,7 @@ int main(){
             printf("%d\n", c);
         }else{
             // if its not a control character print its byte representation too
-            printf("%d ('%c')\n", c, c);
+            printf("%d ('%c')\r\n", c, c);
         }
     }
 
