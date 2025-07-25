@@ -14,7 +14,12 @@
 
 /*** Data ***/
 
-struct termios original_termios;
+// Global state struct
+struct editorConfig{
+    struct termios original_termios;
+};
+
+struct editorConfig E;
 
 
 /*** Terminal configuration ***/
@@ -33,7 +38,7 @@ void die(const char *s){
 void disableTermRawMode(){
     // We try to reset the flags to their original value to reset 'raw' mode
     // If we get an error we end the program with exit status = 1
-    if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &original_termios) == -1){
+    if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &E.original_termios) == -1){
         die("tcsetattr");
     }
 }
@@ -42,13 +47,13 @@ void enableTermRawMode(){
 
     // Check the value of the flags on the terminal and save them on the "original_termios" struct
     // If we get an error we end the program
-    if (tcgetattr(STDIN_FILENO, &original_termios) == -1) die("tcgetattr");
+    if (tcgetattr(STDIN_FILENO, &E.original_termios) == -1) die("tcgetattr");
 
     // Register "disableTermRawMode" to always run on exit
     atexit(disableTermRawMode);
 
     // Define raw as a struct that holds flags
-    struct termios raw = original_termios;
+    struct termios raw = E.original_termios;
 
     // ECHO is a bitflag, defined as 00000000000000000000000000001000 in binary. We use the bitwise-NOT operator (~) on this value to get 11111111111111111111111111110111. We then bitwise-AND this value with the flags field, which forces the fourth bit in the flags field to become 0, and causes every other bit to retain its current value.
     // We set the echo flag to 0 on "raw"
