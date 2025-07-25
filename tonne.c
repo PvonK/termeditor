@@ -33,11 +33,17 @@ void enableTermRawMode(){
     // We now use input flags (iflag)
     // We disable the IXON flag to turn off CTRL-S and CTRL-Q
     // we also unset the ICRNL flag that turns a carriage return into newline
-    raw.c_iflag &= ~(ICRNL | IXON);
+    // The BRKINT flag is unset to stop the program when a break condition happens ¿?
+    // INPCK is unset to enable parity checking. Not particularly useful but part of enabling "raw" mode
+    // ISTRIP is unset to stop the terminal stripping the 8 bit of each input byte. It is normally unset by default but it doesnt hurt to make sure (TODO research why this flag is ever useful)
+    raw.c_iflag &= ~(ISTRIP | INPCK | BRKINT | ICRNL | IXON);
 
     // We also need to modify some output flags
     // We unset the OPOST flag to disable newline input into carriage return + newline translation
     raw.c_oflag &= ~(OPOST);
+
+    // we run an or operator on the CS8 bit mask to set the character size to 8 bits per byte. It is normally already set (TODO research when it is useful to have bytes that arent 8 bits ¿?)
+    raw.c_cflag |= (CS8);
 
     // Sets the new flag to the terminal
     // TCSAFLUSH argument specifies when to apply the change: in this case, it waits for all pending output to be written to the terminal, and also discards any input that hasn’t been read.
