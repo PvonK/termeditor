@@ -35,6 +35,10 @@ void enableTermRawMode(){
     // we also unset the ICRNL flag that turns a carriage return into newline
     raw.c_iflag &= ~(ICRNL | IXON);
 
+    // We also need to modify some output flags
+    // We unset the OPOST flag to disable newline input into carriage return + newline translation
+    raw.c_oflag &= ~(OPOST);
+
     // Sets the new flag to the terminal
     // TCSAFLUSH argument specifies when to apply the change: in this case, it waits for all pending output to be written to the terminal, and also discards any input that hasn’t been read.
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
