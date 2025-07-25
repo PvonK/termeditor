@@ -17,6 +17,9 @@
 
 // Global state struct
 struct editorConfig{
+    int screenrows;
+    int screencols;
+
     struct termios original_termios;
 };
 
@@ -173,8 +176,13 @@ void refreshScreen(){
 
 /*** Init ***/
 
+void initEditor(){
+    if (getWindowSize(&E.screenrows, &E.screencols) == -1) die("getWindowSize");
+}
+
 int main(){
     enableTermRawMode();
+    initEditor();
 
     // while always
     while (1){
