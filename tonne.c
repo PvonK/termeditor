@@ -45,7 +45,15 @@ void enableTermRawMode(){
     // we run an or operator on the CS8 bit mask to set the character size to 8 bits per byte. It is normally already set (TODO research when it is useful to have bytes that arent 8 bits ¿?)
     raw.c_cflag |= (CS8);
 
-    // Sets the new flag to the terminal
+    // We set the minimum number of bytes that 'read()' needs to read before it returns
+    // We set it to 0 to have it return even if there are no bytes (so the process doesnt hang on the user input) 
+    // TODO search what exactly is raw.c_cc . As far as i understood it they were flags for the terminal but now we are changing the behaviour of a function from STDIN_FILENO so Im not following 100%
+    raw.c_cc[VMIN] = 0;
+
+    // We set the max time 'read()' has to wait for new input
+    raw.c_cc[VTIME] = 1;
+
+    // Sets the new flags to the terminal
     // TCSAFLUSH argument specifies when to apply the change: in this case, it waits for all pending output to be written to the terminal, and also discards any input that hasn’t been read.
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
 
@@ -55,8 +63,11 @@ void enableTermRawMode(){
 int main(){
     enableTermRawMode();
 
-    char c;
-    while (read(STDIN_FILENO, &c, 1) == 1 && c != 'q'){
+    // while always
+    while (1){
+        char c = '\0'; // TODO answer these: what is \0? no character? empty byte? Why does it have to be single quotes? // We set c to an empty byte ¿?
+        // We read STDIN q byte at a time and set the c variable to the value read
+        read(STDIN_FILENO, &c, 1);
         // print the value of the c byte
         if (iscntrl(c)){
             printf("%d\n", c);
@@ -64,6 +75,8 @@ int main(){
             // if its not a control character print its byte representation too
             printf("%d ('%c')\r\n", c, c);
         }
+        // We break the loop if we read a 'q' byte in STDIN
+        if (c == 'q') break;
     }
 
     return 0;
