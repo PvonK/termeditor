@@ -83,6 +83,30 @@ void enableTermRawMode(){
 
 }
 
+char readKey(){
+    int nread;
+    char c;
+    // We read STDIN q byte at a time and set the c variable to the value read
+    // TODO -> think if this can just be an if. That way we dont get locked
+    while ((nread = read(STDIN_FILENO, &c, 1)) != 1){
+        // If read fails and it is not because of the timeout (timeout fails set errno var to EAGAIN) we kill the program
+        if (nread == -1 && errno != EAGAIN) die("read");
+    }
+    return c;
+}
+
+
+/*** Input ***/
+
+void processKeypress(){
+    char c = readKey();
+    switch (c){
+        case CTRL_KEY('q'):
+            exit(0);
+            break;
+    }
+}
+
 
 /*** Init ***/
 
@@ -91,19 +115,7 @@ int main(){
 
     // while always
     while (1){
-        char c = '\0'; // TODO answer these: what is \0? no character? empty byte? Why does it have to be single quotes? // We set c to an empty byte ¿?
-        // We read STDIN q byte at a time and set the c variable to the value read
-        // If read fails and it is not because of the timeout we set (timeout fails set errno var to EAGAIN) we kill the program
-        if (read(STDIN_FILENO, &c, 1) == -1 && errno != EAGAIN) die("read");
-        // print the value of the c byte
-        if (iscntrl(c)){
-            printf("%d\n", c);
-        }else{
-            // if its not a control character print its byte representation too
-            printf("%d ('%c')\r\n", c, c);
-        }
-        // We break the loop if we read a CRTL+q byte in STDIN
-        if (c == CTRL_KEY('q')) break;
+        processKeypress();
     }
 
     return 0;
