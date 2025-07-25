@@ -21,6 +21,11 @@ struct termios original_termios;
 
 // Exit function. Prints the error message and exits with code 1
 void die(const char *s){
+
+    // We clear the screen and reset the cursor before printing the error
+    write(STDOUT_FILENO, "\x1b[2J", 4);
+    write(STDOUT_FILENO, "\x1b[H", 3);
+
     perror(s);
     exit(1);
 }
@@ -102,6 +107,9 @@ void processKeypress(){
     char c = readKey();
     switch (c){
         case CTRL_KEY('q'):
+            // We clear the screen and reset the cursor before exiting
+            write(STDOUT_FILENO, "\x1b[2J", 4);
+            write(STDOUT_FILENO, "\x1b[H", 3);
             exit(0);
             break;
     }
