@@ -110,6 +110,26 @@ char readKey(){
 }
 
 
+int getCursorPosition(int *rows, int *cols){
+    // We write an escape sequence ('\x1b[') that queries the terminal status info ('n')
+    // We specifically ask for cursor position (argument '6')
+    if (write(STDOUT_FILENO, "\x1b[6n", 4) != 4) return -1;
+
+    printf("\r\n");
+    char c;
+    // We read the response on stdin
+    while (read(STDIN_FILENO, &c, 1) == 1){
+        if (iscntrl(c)){
+            printf("%d\r\n", c);
+        }else{
+            printf("%d ('%c')\r\n", c, c);
+        }
+    }
+    readKey();
+    return -1;
+}
+
+
 // We pass references to rows and cols so that we can get both values from one function
 int getWindowSize(int *rows, int *cols){
     struct winsize ws;
@@ -122,8 +142,7 @@ int getWindowSize(int *rows, int *cols){
     if (1||ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1 || ws.ws_col == 0){
         // If ioctl fails, we have a fallback, we send 2 escape sequences for moving the cursor 999 spaces to the right and 999 spaces down
         if (write(STDOUT_FILENO, "\x1b[999C\x1b[999B", 12) != 12) return -1;
-        readKey();
-        return -1;
+        return getCursorPosition(rows, cols);
     }else{
         // we set the references passed to the value read
         *cols = ws.ws_col;
