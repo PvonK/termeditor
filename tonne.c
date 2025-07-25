@@ -7,6 +7,11 @@
 #include <unistd.h>
 
 
+/*** Defines ***/
+
+#define CTRL_KEY(k) ((k) & 0x1f)
+
+
 /*** Data ***/
 
 struct termios original_termios;
@@ -97,8 +102,8 @@ int main(){
             // if its not a control character print its byte representation too
             printf("%d ('%c')\r\n", c, c);
         }
-        // We break the loop if we read a 'q' byte in STDIN
-        if (c == 'q') break;
+        // We break the loop if we read a CRTL+q byte in STDIN
+        if (c == CTRL_KEY('q')) break;
     }
 
     return 0;
@@ -110,3 +115,5 @@ int main(){
 // - [ ] Check what a struct is
 // - [ ] Check what & before the struct name is for
 // - [ ] Check why we put parenthesis on the flags (Even when we have only 1 flag and not doing operations between many) to do the bitwise NOT
+//        > Might just be the way to state that we are using the variable to do bitwise operations, since we do the same thing with (k) & 0x1f
+// - [ ] Search the difference between a function and a macro defined with '#define'
