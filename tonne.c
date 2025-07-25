@@ -161,13 +161,35 @@ int getWindowSize(int *rows, int *cols){
 
 /*** Apend Buffer ***/
 
+// We define an append buffer struct to use to append all changes to and then put them on screen on only one write call
 struct abuf{
     char *b;
     int len;
 };
 
+// We define an empty abuf to use as a constructor
 #define ABUF_INIT {NULL, 0}
 
+
+void abAppend(struct abuf *ab, const char *s, int len){
+    // We allocate more space to the string b held in ab
+    // We make the new allocation equal to the length of the buffer plus the length of 's' that was sent as a parameter to this function
+    // We also set the value of new to the string b held in ab
+    char *new = realloc(ab->b, ab->len + len)
+
+    if (new == NULL) return;
+    // we set the value of new after ab->len bytes to the value of s
+    memcpy(&new[ab->len], s, len);
+    // We now set b to be equal to new
+    ab->b = new;
+    // we set len to ab->len + the length of s
+    ab->len += len;
+}
+
+
+void abFree(struct abuf *ab){
+    free(ab->b);
+}
 
 /*** Input ***/
 
