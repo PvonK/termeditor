@@ -105,7 +105,7 @@ int main(){
 }
 
 
-// TODO
+/*** TODO ***/
 
 // - [ ] Check what a struct is
 // - [ ] Check what & before the struct name is for
