@@ -1,4 +1,5 @@
 /*** Includes ***/
+#include <sys/ioctl.h>
 #include <errno.h>
 #include <ctype.h>
 #include <stdio.h>
@@ -103,6 +104,25 @@ char readKey(){
         if (nread == -1 && errno != EAGAIN) die("read");
     }
     return c;
+}
+
+
+// We pass references to rows and cols so that we can get both values from one function
+int getWindowSize(int *rows, int *cols){
+    struct winsize ws;
+
+    // ioctl with the TIOCGWINSZ request gets the size of the terminal
+    // ioctl -> Input/Output ConTroL
+    // TIOCGWINSZ -> Terminal, Input, Output, Control, Get, WINdow, SiZe
+    // TODO -> search why STDOUT_FILENO is necessary here
+    // We also fail if there are no columns
+    if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1 || ws.ws_col == 0){
+        return -1;
+    }else{
+        *cols = ws.ws_col;
+        *rows = ws.ws_row;
+        return 0;
+    }
 }
 
 
