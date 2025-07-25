@@ -119,9 +119,13 @@ int getWindowSize(int *rows, int *cols){
     // TIOCGWINSZ -> Terminal, Input, Output, Control, Get, WINdow, SiZe
     // TODO -> search why STDOUT_FILENO is necessary here
     // We also fail if there are no columns
-    if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1 || ws.ws_col == 0){
+    if (1||ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1 || ws.ws_col == 0){
+        // If ioctl fails, we have a fallback, we send 2 escape sequences for moving the cursor 999 spaces to the right and 999 spaces down
+        if (write(STDOUT_FILENO, "\x1b[999C\x1b[999B", 12) != 12) return -1;
+        readKey();
         return -1;
     }else{
+        // we set the references passed to the value read
         *cols = ws.ws_col;
         *rows = ws.ws_row;
         return 0;
