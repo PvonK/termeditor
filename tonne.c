@@ -1,4 +1,5 @@
 /*** Includes ***/
+#include <string.h>
 #include <sys/ioctl.h>
 #include <errno.h>
 #include <ctype.h>
@@ -175,7 +176,7 @@ void abAppend(struct abuf *ab, const char *s, int len){
     // We allocate more space to the string b held in ab
     // We make the new allocation equal to the length of the buffer plus the length of 's' that was sent as a parameter to this function
     // We also set the value of new to the string b held in ab
-    char *new = realloc(ab->b, ab->len + len)
+    char *new = realloc(ab->b, ab->len + len);
 
     if (new == NULL) return;
     // we set the value of new after ab->len bytes to the value of s
@@ -187,6 +188,7 @@ void abAppend(struct abuf *ab, const char *s, int len){
 }
 
 
+// Function for emptying the append buffer
 void abFree(struct abuf *ab){
     free(ab->b);
 }
