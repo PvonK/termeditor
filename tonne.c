@@ -210,33 +210,42 @@ void processKeypress(){
 
 /*** Output ***/
 
-void drawRows(){
+void drawRows(struct abuf *ab){
     int y;
     // For all rows we write a tilde at the start of the line
+    // We write them to a buffer that will then write every line in one go
     for (y=0;y<E.screenrows;y++){
-        write(STDOUT_FILENO, "~", 1);
+        abAppend(ab, "~", 1);
         if (y < E.screenrows-1){
-            write(STDOUT_FILENO, "\r\n", 2);
+            abAppend(ab, "\r\n", 2);
         }
     }
 }
 
 
 void refreshScreen(){
-    // We write 4 bytes to the STDOUT
+    // we initiate an append buffer
+    struct abuf ab = ABUF_INIT;
+
+    // We write 4 bytes to the buffer
     // we send an escape sequence ('\x1b' (escape character) followed by '[')
     // The escape sequence we send is 'J' that is for clearing the screen
     // We send it with the argument '2' which means clear the whole screen
-    write(STDOUT_FILENO, "\x1b[2J", 4);
+    abAppend(&ab, "\x1b[2J", 4);
 
-    // We write 3 bytes to stdout
+    // We write 3 bytes to the buffer
     // we write an escape sequence followed by the H byte
     // The H byte on the escape sequence is for setting the cursor position. It takes 2 args, we dont use any to set it to 1,1
-    write(STDOUT_FILENO, "\x1b[H", 3);
+    abAppend(&ab, "\x1b[H", 3);
 
-    drawRows();
-    // We reset the cursor after drawing the lines
-    write(STDOUT_FILENO, "\x1b[H", 3);
+    drawRows(&ab);
+    // We add the escape sequence bytes to reset the cursor after drawing the lines
+    abAppend(&ab, "\x1b[H", 3);
+
+    // We write all the bytes on the buffer to the screen
+    write(STDOUT_FILENO, ab.b, ab.len);
+    // We free the append buffer
+    abFree(&ab);
 
 }
 
