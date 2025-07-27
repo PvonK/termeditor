@@ -227,6 +227,9 @@ void refreshScreen(){
     // we initiate an append buffer
     struct abuf ab = ABUF_INIT;
 
+    // We add an escape sequence "reset mode" to hide the cursor during the screen draw
+    abAppend(&ab, "\x1b[?25l",6);
+
     // We write 4 bytes to the buffer
     // we send an escape sequence ('\x1b' (escape character) followed by '[')
     // The escape sequence we send is 'J' that is for clearing the screen
@@ -241,6 +244,9 @@ void refreshScreen(){
     drawRows(&ab);
     // We add the escape sequence bytes to reset the cursor after drawing the lines
     abAppend(&ab, "\x1b[H", 3);
+
+    // We add an escape sequence to show the ursor again
+    abAppend(&ab, "\x1b[?25h", 6);
 
     // We write all the bytes on the buffer to the screen
     write(STDOUT_FILENO, ab.b, ab.len);
