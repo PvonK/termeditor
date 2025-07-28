@@ -216,6 +216,7 @@ void drawRows(struct abuf *ab){
     // We write them to a buffer that will then write every line in one go
     for (y=0;y<E.screenrows;y++){
         abAppend(ab, "~", 1);
+        abAppend(ab, "\x1b[K", 3);
         if (y < E.screenrows-1){
             abAppend(ab, "\r\n", 2);
         }
@@ -234,7 +235,8 @@ void refreshScreen(){
     // we send an escape sequence ('\x1b' (escape character) followed by '[')
     // The escape sequence we send is 'J' that is for clearing the screen
     // We send it with the argument '2' which means clear the whole screen
-    abAppend(&ab, "\x1b[2J", 4);
+    // abAppend(&ab, "\x1b[2J", 4);
+    // we remove this line in favour of clearing the line when we draw it on drawRows function
 
     // We write 3 bytes to the buffer
     // we write an escape sequence followed by the H byte
