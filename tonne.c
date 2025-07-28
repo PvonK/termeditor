@@ -13,6 +13,8 @@
 
 #define CTRL_KEY(k) ((k) & 0x1f)
 
+#define TONNE_VERSION "0.0.1"
+
 
 /*** Data ***/
 
@@ -215,7 +217,18 @@ void drawRows(struct abuf *ab){
     // For all rows we write a tilde at the start of the line
     // We write them to a buffer that will then write every line in one go
     for (y=0;y<E.screenrows;y++){
-        abAppend(ab, "~", 1);
+
+        if (y==E.screenrows/3){
+            char welcome_message[80];
+            int welcome_len = snprintf(welcome_message, sizeof(welcome_message),
+                "Tonne Editor -- version %s", TONNE_VERSION);
+                if (welcome_len > E.screencols) welcome_len = E.screencols;
+                abAppend(ab, welcome_message, welcome_len);
+        }else{
+            abAppend(ab, "~", 1);
+        }
+
+
         abAppend(ab, "\x1b[K", 3);
         if (y < E.screenrows-1){
             abAppend(ab, "\r\n", 2);
