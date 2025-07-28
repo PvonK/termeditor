@@ -219,10 +219,26 @@ void drawRows(struct abuf *ab){
     for (y=0;y<E.screenrows;y++){
 
         if (y==E.screenrows/3){
+            // We define a char array to store the welcome message
             char welcome_message[80];
+
+            // We format the char array with the version number defined and get the length
             int welcome_len = snprintf(welcome_message, sizeof(welcome_message),
                 "Tonne Editor -- version %s", TONNE_VERSION);
+                // If the message foesnt fit on the screen, we truncate it
                 if (welcome_len > E.screencols) welcome_len = E.screencols;
+
+                // We get the padding needed for the message to be on the middle of the screen
+                int padding = (E.screencols - welcome_len)/2;
+                if (padding){
+                    // We add a tilde character at the start of the line
+                    abAppend(ab, "~", 1);
+                    // We reduce the padding counter
+                    padding--;
+                }
+                // we add a space to the write buffer while reducing padding counter by 1 for each space
+                while (padding--) abAppend(ab, " ", 1);
+
                 abAppend(ab, welcome_message, welcome_len);
         }else{
             abAppend(ab, "~", 1);
