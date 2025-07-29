@@ -277,8 +277,13 @@ void refreshScreen(){
     abAppend(&ab, "\x1b[H", 3);
 
     drawRows(&ab);
-    // We add the escape sequence bytes to reset the cursor after drawing the lines
-    abAppend(&ab, "\x1b[H", 3);
+
+    // We create a character array
+    char buf[32];
+    // We assign the escape sequence to position cursor to our buffer array with the coordinates we want the cursor to be in
+    snprintf(buf, sizeof(buf), "\x1b[%d;%dH", E.cy+1, E.cx+1);
+    // We add the characters to the write buffer
+    abAppend(&ab, buf, strlen(buf));
 
     // We add an escape sequence to show the ursor again
     abAppend(&ab, "\x1b[?25h", 6);
