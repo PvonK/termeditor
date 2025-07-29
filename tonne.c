@@ -20,8 +20,12 @@
 
 // Global state struct
 struct editorConfig{
+    // Size of the terminal
     int screenrows;
     int screencols;
+
+    // Cursor position
+    int cx, cy;
 
     struct termios original_termios;
 };
@@ -290,6 +294,9 @@ void refreshScreen(){
 /*** Init ***/
 
 void initEditor(){
+    E.cx = 0;
+    E.cy = 0;
+
     if (getWindowSize(&E.screenrows, &E.screencols) == -1) die("getWindowSize");
 }
 
