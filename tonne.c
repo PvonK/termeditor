@@ -201,6 +201,31 @@ void abFree(struct abuf *ab){
 
 /*** Input ***/
 
+void moveCursor(char key){
+    switch (key){
+        // Move left
+        case 'a':
+        case 'h':
+            E.cx--;
+            break;
+        // Move right
+        case 'd':
+        case 'l':
+            E.cx++;
+            break;
+        // Move up
+        case 'w':
+        case 'k':
+            E.cy--;
+            break;
+        // Move down
+        case 's':
+        case 'j':
+            E.cy++;
+            break;
+    }
+}
+
 void processKeypress(){
     char c = readKey();
     switch (c){
@@ -209,6 +234,17 @@ void processKeypress(){
             write(STDOUT_FILENO, "\x1b[2J", 4);
             write(STDOUT_FILENO, "\x1b[H", 3);
             exit(0);
+            break;
+
+        case 'a':
+        case 'h':
+        case 'd':
+        case 'l':
+        case 'w':
+        case 'k':
+        case 's':
+        case 'j':
+            moveCursor(c);
             break;
     }
 }
