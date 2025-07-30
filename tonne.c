@@ -15,6 +15,13 @@
 
 #define TONNE_VERSION "0.0.1"
 
+enum editorKeys{
+    ARROW_LEFT = 'a',
+    ARROW_RIGHT = 'd',
+    ARROW_UP = 'w',
+    ARROW_DOWN = 's'
+};
+
 
 /*** Data ***/
 
@@ -130,10 +137,10 @@ char readKey(){
             // We now check the character to detect what escape sequence was pressed
             switch (seq[1]){
                 // We map the characters returned by the arrow keys to wasd to move the cursor around
-                case 'A': return 'w';
-                case 'B': return 's';
-                case 'C': return 'd';
-                case 'D': return 'a';
+                case 'A': return ARROW_UP;
+                case 'B': return ARROW_DOWN;
+                case 'C': return ARROW_RIGHT;
+                case 'D': return ARROW_LEFT;
             }
         }
         // If we dont recognize the escape sequence we return the escape character
@@ -232,23 +239,19 @@ void abFree(struct abuf *ab){
 void moveCursor(char key){
     switch (key){
         // Move left
-        case 'a':
-        case 'h':
+        case ARROW_LEFT:
             E.cx--;
             break;
         // Move right
-        case 'd':
-        case 'l':
+        case ARROW_RIGHT:
             E.cx++;
             break;
         // Move up
-        case 'w':
-        case 'k':
+        case ARROW_UP:
             E.cy--;
             break;
         // Move down
-        case 's':
-        case 'j':
+        case ARROW_DOWN:
             E.cy++;
             break;
     }
@@ -256,6 +259,8 @@ void moveCursor(char key){
 
 void processKeypress(){
     char c = readKey();
+
+    // We decide what to do with special keypresses depending on the type of keypress
     switch (c){
         case CTRL_KEY('q'):
             // We clear the screen and reset the cursor before exiting
@@ -264,14 +269,10 @@ void processKeypress(){
             exit(0);
             break;
 
-        case 'a':
-        case 'h':
-        case 'd':
-        case 'l':
-        case 'w':
-        case 'k':
-        case 's':
-        case 'j':
+        case ARROW_LEFT:
+        case ARROW_RIGHT:
+        case ARROW_UP:
+        case ARROW_DOWN:
             moveCursor(c);
             break;
     }
