@@ -310,6 +310,15 @@ void processKeypress(){
             exit(0);
             break;
 
+        // Home key moves the cursor to the column 0
+        case HOME_KEY:
+            E.cx = 0;
+            break;
+        // End key moves the cursor to the last column
+        case END_KEY:
+            E.cx = E.screencols-1;
+            break;
+
         // For the page up and page down keys
         case PAGE_UP:
         case PAGE_DOWN:
