@@ -113,6 +113,34 @@ char readKey(){
         // If read fails and it is not because of the timeout (timeout fails set errno var to EAGAIN) we kill the program
         if (nread == -1 && errno != EAGAIN) die("read");
     }
+
+    // check for escape sequences
+    if (c == '\x1b'){
+        // We define a sequence of 3 bytes to hold the escape sequence
+        char seq[3];
+        // We read the first byte after the escape sequence
+        // (which should be '[' as we will later check)
+        // if there isn't any (like we just pressed the escape key), we just return the escape byte
+        if (read(STDIN_FILENO, &seq[0], 1) != 1) return '\x1b';
+        // We read another byte to check the escape sequence identifier
+        if (read(STDIN_FILENO, &seq[1], 1) != 1) return '\x1b';
+
+        // If the second byte in the sequence is [ we continue to read the escape sequence
+        if (seq[0] == '['){
+            // We now check the character to detect what escape sequence was pressed
+            switch (seq[1]){
+                // We map the characters returned by the arrow keys to wasd to move the cursor around
+                case 'A': return 'w';
+                case 'B': return 's';
+                case 'C': return 'd';
+                case 'D': return 'a';
+            }
+        }
+        // If we dont recognize the escape sequence we return the escape character
+        return '\x1b';
+
+    } // We dont really need an else here, we can just return c
+
     return c;
 }
 
