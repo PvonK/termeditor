@@ -19,7 +19,9 @@ enum editorKeys{
     ARROW_LEFT = 1000,
     ARROW_RIGHT,
     ARROW_UP,
-    ARROW_DOWN
+    ARROW_DOWN,
+    PAGE_UP,
+    PAGE_DOWN
 };
 
 
@@ -134,6 +136,21 @@ int readKey(){
 
         // If the second byte in the sequence is [ we continue to read the escape sequence
         if (seq[0] == '['){
+            // If the second char on the escape sequence is between 0 and 9 we check the third char on the sequence
+            if (seq[1] >= '0' && seq[1] <= '9'){
+                // We read another character, if there is no 3rd character we return the escape character
+                if (read(STDIN_FILENO, &seq[2], 1) != 1) return '\x1b';
+                // We then check if the 3rd caracter read was '~' and decide the action based on the 2nd character
+                if (seq[2] == '~'){
+                    // we decide the action based on the second character of the sequence
+                    switch (seq[1]){
+                        case '5': return PAGE_UP;
+                        case '6': return PAGE_DOWN;
+                    }
+                }
+            }
+
+
             // We now check the character to detect what escape sequence was pressed
             switch (seq[1]){
                 // We map the characters returned by the arrow keys to wasd to move the cursor around
