@@ -16,10 +16,10 @@
 #define TONNE_VERSION "0.0.1"
 
 enum editorKeys{
-    ARROW_LEFT = 'a',
-    ARROW_RIGHT = 'd',
-    ARROW_UP = 'w',
-    ARROW_DOWN = 's'
+    ARROW_LEFT = 1000,
+    ARROW_RIGHT,
+    ARROW_UP,
+    ARROW_DOWN
 };
 
 
@@ -111,7 +111,7 @@ void enableTermRawMode(){
 
 }
 
-char readKey(){
+int readKey(){
     int nread;
     char c;
     // We read STDIN q byte at a time and set the c variable to the value read
@@ -236,7 +236,7 @@ void abFree(struct abuf *ab){
 
 /*** Input ***/
 
-void moveCursor(char key){
+void moveCursor(int key){
     switch (key){
         // Move left
         case ARROW_LEFT:
@@ -258,7 +258,7 @@ void moveCursor(char key){
 }
 
 void processKeypress(){
-    char c = readKey();
+    int c = readKey();
 
     // We decide what to do with special keypresses depending on the type of keypress
     switch (c){
