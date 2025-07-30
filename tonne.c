@@ -21,7 +21,9 @@ enum editorKeys{
     ARROW_UP,
     ARROW_DOWN,
     PAGE_UP,
-    PAGE_DOWN
+    PAGE_DOWN,
+    HOME_KEY,
+    END_KEY
 };
 
 
@@ -144,8 +146,13 @@ int readKey(){
                 if (seq[2] == '~'){
                     // we decide the action based on the second character of the sequence
                     switch (seq[1]){
+                        // Home and end key could recieved as one of 2 numbers each
+                        case '1': return HOME_KEY;
+                        case '4': return END_KEY;
                         case '5': return PAGE_UP;
                         case '6': return PAGE_DOWN;
+                        case '7': return HOME_KEY;
+                        case '8': return END_KEY;
                     }
                 }
             }
@@ -158,6 +165,15 @@ int readKey(){
                 case 'B': return ARROW_DOWN;
                 case 'C': return ARROW_RIGHT;
                 case 'D': return ARROW_LEFT;
+                // Home and end escape sequence could also be \x1b[H or \x1b[F
+                case 'H': return HOME_KEY;
+                case 'F': return END_KEY;
+            }
+        // seq 0 may not always be [ sometimes home and end escape sequences start with 'O'
+        }else if (seq[0] == 'O'){
+            switch (seq[1]){
+                case 'H': return HOME_KEY;
+                case 'F': return END_KEY;
             }
         }
         // If we dont recognize the escape sequence we return the escape character
