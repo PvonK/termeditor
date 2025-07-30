@@ -240,19 +240,27 @@ void moveCursor(int key){
     switch (key){
         // Move left
         case ARROW_LEFT:
-            E.cx--;
+            if (E.cx != 0){ // cant go left if cursor is on the left
+                E.cx--;
+            }
             break;
         // Move right
         case ARROW_RIGHT:
-            E.cx++;
+            if (E.cx != E.screencols-1){ // cant go right if we are at the furthest position (-1 because cx is 0 indexed)
+                E.cx++;
+            }
             break;
         // Move up
         case ARROW_UP:
-            E.cy--;
+            if (E.cy != 0){ // cant go up if cursor is at the top
+                E.cy--;
+            }
             break;
         // Move down
         case ARROW_DOWN:
-            E.cy++;
+            if (E.cy != E.screenrows-1){ // cant go down if we are at the bottom of the terminal (-1 because cx is 0 indexed)
+                E.cy++;
+            }
             break;
     }
 }
