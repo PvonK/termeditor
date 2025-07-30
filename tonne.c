@@ -294,6 +294,20 @@ void processKeypress(){
             exit(0);
             break;
 
+        // For the page up and page down keys
+        case PAGE_UP:
+        case PAGE_DOWN:
+            {
+                // We run a loop for as many rows as the terminal has
+                int times = E.screenrows;
+                while (times--)
+                    // we send the arrow key character to the move cursor functions 'times' times
+                    // depending on the page key that was pressed we choose the arrow key to be sent
+                    moveCursor(c == PAGE_UP ? ARROW_UP : ARROW_DOWN);
+            }
+            break;
+
+
         case ARROW_LEFT:
         case ARROW_RIGHT:
         case ARROW_UP:
