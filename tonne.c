@@ -30,6 +30,12 @@ enum editorKeys{
 
 /*** Data ***/
 
+// Datatype for storing a row
+typedef struct erow {
+    int size;
+    char *chars;
+} erow;
+
 // Global state struct
 struct editorConfig{
     // Size of the terminal
@@ -38,6 +44,12 @@ struct editorConfig{
 
     // Cursor position
     int cx, cy;
+
+    // Number of rows
+    int numrows;
+
+    // the row of text to be displayed
+    erow row;
 
     struct termios original_termios;
 };
@@ -432,6 +444,7 @@ void refreshScreen(){
 void initEditor(){
     E.cx = 0;
     E.cy = 0;
+    E.numrows = 0;
 
     if (getWindowSize(&E.screenrows, &E.screencols) == -1) die("getWindowSize");
 }
