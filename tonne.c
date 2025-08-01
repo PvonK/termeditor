@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <termios.h>
 #include <unistd.h>
+#include <sys/types.h>
 
 
 /*** Defines ***/
@@ -248,6 +249,33 @@ int getWindowSize(int *rows, int *cols){
 }
 
 
+/*** file i/o ***/
+
+void openFile(){
+    // Create a pointer 'line' that holds a reference to the first byte of the string "Hello, world!" in memory
+    char *line = "Hello, world!";
+    // Define the length of the variable 'line'
+    // We use ssize_t to handle the quantity of bytes on functions like read(). Also to hold the -1 that is returned on error
+    ssize_t linelen = 13;
+
+    // We set the size of the row to be written
+    E.row.size = linelen;
+
+    // Allocate the space in memory for the row.chars variable
+    // It is the length of the string plus one for the 0 byte so it is interpreted as a string
+    E.row.chars = malloc(linelen+1);
+
+    // Copy 13 (linelen) bytes from the pointer 'line' onwards into E.row.chars
+    memcpy(E.row.chars, line, linelen);
+
+    // we set the last character (index 13 so the 14th byte) to a 0 byte so the variable is read as a string
+    E.row.chars[linelen] = '\0';
+
+    // We set the number of rows that need to be displayed
+    E.numrows = 1;
+}
+
+
 /*** Apend Buffer ***/
 
 // We define an append buffer struct to use to append all changes to and then put them on screen on only one write call
@@ -452,6 +480,7 @@ void initEditor(){
 int main(){
     enableTermRawMode();
     initEditor();
+    openFile();
 
     // while always
     while (1){
