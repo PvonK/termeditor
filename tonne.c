@@ -1,4 +1,5 @@
 /*** Includes ***/
+// The included files use these macros to decide what features are imported
 #define _DEFAULT_SOURCE
 #define _BSD_SOURCE
 #define _GNU_SOURCE
