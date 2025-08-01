@@ -251,28 +251,48 @@ int getWindowSize(int *rows, int *cols){
 
 /*** file i/o ***/
 
-void openFile(){
-    // Create a pointer 'line' that holds a reference to the first byte of the string "Hello, world!" in memory
-    char *line = "Hello, world!";
+void openFile(char *filename){
+    // We create a pointer to the file chosen
+    // TODO research what `FILE` is
+    FILE *fp = fopen(filename, "r");
+    if (!fp) die("fopen");
+
+    // Create a pointer 'line' that will hold a reference to the first byte of the line to be written
+    char *line = NULL;
+
+    // We define the line capacity
+    // It will later be set to the amount of memory allocated for the line read
+    size_t linecap = 0;
+
     // Define the length of the variable 'line'
     // We use ssize_t to handle the quantity of bytes on functions like read(). Also to hold the -1 that is returned on error
-    ssize_t linelen = 13;
+    ssize_t linelen;
+    // We set linelen to the size of the line we read (if it is the end of the line it will be set to -1)
+    // We also set the pointer line to the start of the line read
+    linelen = getline(&line, &linecap, fp);
+    // If we didnt get an error or it is not the end of the file
+    if (linelen != -1){
+        // We strip the line breaks and carriage return from the string since we wont display them
+        while (linelen > 0 && (line[linelen-1] == '\n' || line[linelen-1] == '\r')) linelen--;
 
-    // We set the size of the row to be written
-    E.row.size = linelen;
+        // We set the size of the row to be written
+        E.row.size = linelen;
 
-    // Allocate the space in memory for the row.chars variable
-    // It is the length of the string plus one for the 0 byte so it is interpreted as a string
-    E.row.chars = malloc(linelen+1);
+        // Allocate the space in memory for the row.chars variable
+        // It is the length of the string read plus one for the 0 byte so it is interpreted as a string
+        E.row.chars = malloc(linelen+1);
 
-    // Copy 13 (linelen) bytes from the pointer 'line' onwards into E.row.chars
-    memcpy(E.row.chars, line, linelen);
+        // Copy 13 (linelen) bytes from the pointer 'line' onwards into E.row.chars
+        memcpy(E.row.chars, line, linelen);
 
-    // we set the last character (index 13 so the 14th byte) to a 0 byte so the variable is read as a string
-    E.row.chars[linelen] = '\0';
+        // we set the last character (index 13 so the 14th byte) to a 0 byte so the variable is read as a string
+        E.row.chars[linelen] = '\0';
 
-    // We set the number of rows that need to be displayed
-    E.numrows = 1;
+        // We set the number of rows that need to be displayed
+        E.numrows = 1;
+    }
+    free(line);
+    fclose(fp);
 }
 
 
@@ -486,10 +506,15 @@ void initEditor(){
     if (getWindowSize(&E.screenrows, &E.screencols) == -1) die("getWindowSize");
 }
 
-int main(){
+// Main has 2 parameters to handle arguments
+int main(int argc, char *argv[]){
     enableTermRawMode();
     initEditor();
-    openFile();
+    // if there is an argument, we open the file
+    // TODO is it as simple as that to handle arguments? they are passed by the shell directly to main?
+    if (argc >= 2){
+        openFile(argv[1]);
+    }
 
     // while always
     while (1){
