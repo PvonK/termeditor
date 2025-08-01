@@ -392,33 +392,42 @@ void drawRows(struct abuf *ab){
     // For all rows we write a tilde at the start of the line
     // We write them to a buffer that will then write every line in one go
     for (y=0;y<E.screenrows;y++){
+        // Only draw tildes and version info on the rows that are lower than the rows drawn from the file. ie. only on lines without content
+        if (y >= E.numrows){
+            if (y==E.screenrows/3){
+                // We define a char array to store the welcome message
+                char welcome_message[80];
 
-        if (y==E.screenrows/3){
-            // We define a char array to store the welcome message
-            char welcome_message[80];
+                // We format the char array with the version number defined and get the length
+                int welcome_len = snprintf(welcome_message, sizeof(welcome_message),
+                    "Tonne Editor -- version %s", TONNE_VERSION);
+                    // If the message foesnt fit on the screen, we truncate it
+                    if (welcome_len > E.screencols) welcome_len = E.screencols;
 
-            // We format the char array with the version number defined and get the length
-            int welcome_len = snprintf(welcome_message, sizeof(welcome_message),
-                "Tonne Editor -- version %s", TONNE_VERSION);
-                // If the message foesnt fit on the screen, we truncate it
-                if (welcome_len > E.screencols) welcome_len = E.screencols;
+                    // We get the padding needed for the message to be on the middle of the screen
+                    int padding = (E.screencols - welcome_len)/2;
+                    if (padding){
+                        // We add a tilde character at the start of the line
+                        abAppend(ab, "~", 1);
+                        // We reduce the padding counter
+                        padding--;
+                    }
+                    // we add a space to the write buffer while reducing padding counter by 1 for each space
+                    while (padding--) abAppend(ab, " ", 1);
 
-                // We get the padding needed for the message to be on the middle of the screen
-                int padding = (E.screencols - welcome_len)/2;
-                if (padding){
-                    // We add a tilde character at the start of the line
-                    abAppend(ab, "~", 1);
-                    // We reduce the padding counter
-                    padding--;
-                }
-                // we add a space to the write buffer while reducing padding counter by 1 for each space
-                while (padding--) abAppend(ab, " ", 1);
-
-                abAppend(ab, welcome_message, welcome_len);
+                    abAppend(ab, welcome_message, welcome_len);
+            }else{
+                abAppend(ab, "~", 1);
+            }
         }else{
-            abAppend(ab, "~", 1);
-        }
+            // We get the size of the string we need to write
+            int len = E.row.size;
+            // We truncate the length of the string we will draw to the size of the screen
+            if (len > E.screencols) len = E.screencols;
 
+            // We add the characters to the append buffer
+            abAppend(ab, E.row.chars, len);
+        }
 
         abAppend(ab, "\x1b[K", 3);
         if (y < E.screenrows-1){
