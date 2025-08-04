@@ -418,8 +418,8 @@ void drawRows(struct abuf *ab){
     // We write them to a buffer that will then write every line in one go
     for (y=0;y<E.screenrows;y++){
         // Only draw tildes and version info on the rows that are lower than the rows drawn from the file. ie. only on lines without content
-        if (y >= E.numrows){
-            if (y==E.screenrows/3){
+        if (y >= E.numrows){ // I dont quite get the point of this line after step 60. Is it only here to draw tildes on the empty lines under the file? i think so
+            if (E.numrows == 0 && y==E.screenrows/3){
                 // We define a char array to store the welcome message
                 char welcome_message[80];
 
