@@ -54,8 +54,8 @@ struct editorConfig{
     // Number of rows
     int numrows;
 
-    // the row of text to be displayed
-    erow row;
+    // A pointer to the first row of text to be displayed
+    erow *row;
 
     struct termios original_termios;
 };
@@ -507,6 +507,7 @@ void initEditor(){
     E.cx = 0;
     E.cy = 0;
     E.numrows = 0;
+    E.row = NULL;
 
     if (getWindowSize(&E.screenrows, &E.screencols) == -1) die("getWindowSize");
 }
