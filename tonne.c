@@ -253,6 +253,28 @@ int getWindowSize(int *rows, int *cols){
     }
 }
 
+/*** row operations ***/
+
+void appendRow(char *s, size_t len){
+
+   // We set the size of the row to be written
+   E.row.size = len;
+
+   // Allocate the space in memory for the row.chars variable
+   // It is the length of the string read plus one for the 0 byte so it is interpreted as a string
+   E.row.chars = malloc(len+1);
+
+   // Copy 13 (len) bytes from the pointer 's' onwards into E.row.chars
+   memcpy(E.row.chars, s, len);
+
+   // we set the last character (index 13 so the 14th byte) to a 0 byte so the variable is read as a string
+   E.row.chars[len] = '\0';
+
+   // We set the number of rows that need to be displayed
+   E.numrows = 1;
+
+}
+
 
 /*** file i/o ***/
 
@@ -279,22 +301,7 @@ void openFile(char *filename){
     if (linelen != -1){
         // We strip the line breaks and carriage return from the string since we wont display them
         while (linelen > 0 && (line[linelen-1] == '\n' || line[linelen-1] == '\r')) linelen--;
-
-        // We set the size of the row to be written
-        E.row.size = linelen;
-
-        // Allocate the space in memory for the row.chars variable
-        // It is the length of the string read plus one for the 0 byte so it is interpreted as a string
-        E.row.chars = malloc(linelen+1);
-
-        // Copy 13 (linelen) bytes from the pointer 'line' onwards into E.row.chars
-        memcpy(E.row.chars, line, linelen);
-
-        // we set the last character (index 13 so the 14th byte) to a 0 byte so the variable is read as a string
-        E.row.chars[linelen] = '\0';
-
-        // We set the number of rows that need to be displayed
-        E.numrows = 1;
+        appendRow(line, linelen);
     }
     free(line);
     fclose(fp);
