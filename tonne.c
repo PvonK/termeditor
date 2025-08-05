@@ -257,21 +257,29 @@ int getWindowSize(int *rows, int *cols){
 
 void appendRow(char *s, size_t len){
 
-   // We set the size of the row to be written
-   E.row.size = len;
+    // We allocate enough space for the rows we need to write
+    // We make E.row pointer point to the start of this block of memory
+    E.row = realloc(E.row, sizeof(erow) * (E.numrows + 1));
 
-   // Allocate the space in memory for the row.chars variable
-   // It is the length of the string read plus one for the 0 byte so it is interpreted as a string
-   E.row.chars = malloc(len+1);
+    // We create an int to hold the index of the new row we are appending
+    int at = E.numrows;
 
-   // Copy 13 (len) bytes from the pointer 's' onwards into E.row.chars
-   memcpy(E.row.chars, s, len);
+    // We set the length of this row
+    // We set the size of the row to be written
+    E.row[at].size = len;
 
-   // we set the last character (index 13 so the 14th byte) to a 0 byte so the variable is read as a string
-   E.row.chars[len] = '\0';
+    // We allocate the memory to hold all characters for this line
+    // It is the length of the string read plus one for the 0 byte so it is interpreted as a string
+    E.row[at].chars = malloc(len + 1);
 
-   // We set the number of rows that need to be displayed
-   E.numrows = 1;
+    // We move len number of bytes from the pointer 's' onwards into E.row.chars
+    memcpy(E.row[at].chars, s, len);
+
+    // We set the last character to a zero byte so it is interpreted as a string and not just as a collection of bytes
+    E.row[at].chars[len] = '\0';
+
+    // We increment the counter for the number of rows
+    E.numrows++;
 
 }
 
