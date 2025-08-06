@@ -259,6 +259,7 @@ void appendRow(char *s, size_t len){
 
     // We allocate enough space for the rows we need to write
     // We make E.row pointer point to the start of this block of memory
+    // TODO if erow is a struct, why does sizeof know its size? what is going on there?
     E.row = realloc(E.row, sizeof(erow) * (E.numrows + 1));
 
     // We create an int to hold the index of the new row we are appending
@@ -461,12 +462,12 @@ void drawRows(struct abuf *ab){
             }
         }else{
             // We get the size of the string we need to write
-            int len = E.row.size;
+            int len = E.row[y].size;
             // We truncate the length of the string we will draw to the size of the screen
             if (len > E.screencols) len = E.screencols;
 
             // We add the characters to the append buffer
-            abAppend(ab, E.row.chars, len);
+            abAppend(ab, E.row[y].chars, len);
         }
 
         abAppend(ab, "\x1b[K", 3);
