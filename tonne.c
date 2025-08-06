@@ -305,11 +305,12 @@ void openFile(char *filename){
     ssize_t linelen;
     // We set linelen to the size of the line we read (if it is the end of the line it will be set to -1)
     // We also set the pointer line to the start of the line read
-    linelen = getline(&line, &linecap, fp);
-    // If we didnt get an error or it is not the end of the file
-    if (linelen != -1){
+    // We also put that definition inside the condition for a while loop so we read until we get -1
+    while ((linelen = getline(&line, &linecap, fp)) != -1){
+
         // We strip the line breaks and carriage return from the string since we wont display them
         while (linelen > 0 && (line[linelen-1] == '\n' || line[linelen-1] == '\r')) linelen--;
+        // We then add the row to the buffer
         appendRow(line, linelen);
     }
     free(line);
