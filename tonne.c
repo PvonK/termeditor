@@ -48,6 +48,9 @@ struct editorConfig{
     int screenrows;
     int screencols;
 
+    // Offset between the file rows and the terminal rows
+    int rowoffset;
+
     // Cursor position
     int cx, cy;
 
@@ -523,6 +526,7 @@ void refreshScreen(){
 void initEditor(){
     E.cx = 0;
     E.cy = 0;
+    E.rowoffset = 0;
     E.numrows = 0;
     E.row = NULL;
 
