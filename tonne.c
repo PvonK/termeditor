@@ -437,8 +437,10 @@ void drawRows(struct abuf *ab){
     // For all rows we write a tilde at the start of the line
     // We write them to a buffer that will then write every line in one go
     for (y=0;y<E.screenrows;y++){
+	// We create a variable to find the line of the file to draw
+	int filerow = y + E.rowoffset;
         // Only draw tildes and version info on the rows that are lower than the rows drawn from the file. ie. only on lines without content
-        if (y >= E.numrows){ // I dont quite get the point of this line after step 60. Is it only here to draw tildes on the empty lines under the file? i think so
+        if (filerow >= E.numrows){ // I dont quite get the point of this line after step 60. Is it only here to draw tildes on the empty lines under the file? i think so. After step 67 this now makes sense
             if (E.numrows == 0 && y==E.screenrows/3){
                 // We define a char array to store the welcome message
                 char welcome_message[80];
@@ -466,12 +468,12 @@ void drawRows(struct abuf *ab){
             }
         }else{
             // We get the size of the string we need to write
-            int len = E.row[y].size;
+            int len = E.row[filerow].size;
             // We truncate the length of the string we will draw to the size of the screen
             if (len > E.screencols) len = E.screencols;
 
             // We add the characters to the append buffer
-            abAppend(ab, E.row[y].chars, len);
+            abAppend(ab, E.row[filerow].chars, len);
         }
 
         abAppend(ab, "\x1b[K", 3);
