@@ -354,6 +354,24 @@ void abFree(struct abuf *ab){
     free(ab->b);
 }
 
+/*** Output ***/
+void scroll(){
+
+    // If the cursor is above the first line shown in the editor
+    if (E.cy < E.rowoffset){
+        // We set the offset to the position of the cursor (scroll up)
+        E.rowoffset = E.cy;
+    }
+
+    // if the cursor is lower than the offset and the length of the screen
+    if (E.cy >= E.rowoffset + E.screenrows){
+        // we set the offset to the offset +1. (we do it in a convoluded way but thats essentialy what is happening)
+        E.rowoffset = E.cy - E.screenrows + 1;
+    }
+
+}
+
+
 /*** Input ***/
 
 void moveCursor(int key){
@@ -485,6 +503,7 @@ void drawRows(struct abuf *ab){
 
 
 void refreshScreen(){
+    scroll();
     // we initiate an append buffer
     struct abuf ab = ABUF_INIT;
 
