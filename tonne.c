@@ -396,7 +396,7 @@ void moveCursor(int key){
             break;
         // Move down
         case ARROW_DOWN:
-            if (E.cy != E.screenrows-1){ // cant go down if we are at the bottom of the terminal (-1 because cx is 0 indexed)
+            if (E.cy != E.numrows-1){ // cant go down if we are at the bottom of the file (-1 because cx is 0 indexed)
                 E.cy++;
             }
             break;
