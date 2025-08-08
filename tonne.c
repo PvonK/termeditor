@@ -527,7 +527,9 @@ void refreshScreen(){
     // We create a character array
     char buf[32];
     // We assign the escape sequence to position cursor to our buffer array with the coordinates we want the cursor to be in
-    snprintf(buf, sizeof(buf), "\x1b[%d;%dH", E.cy+1, E.cx+1);
+    // The position of the cursor on E.cy is the position of the cursor on the file (0 indexed)
+    // We subtract from the position of the cursor on the file, the offset of the lines to get the position the cursor should be on on the screen
+    snprintf(buf, sizeof(buf), "\x1b[%d;%dH", (E.cy - E.rowoffset) + 1, E.cx+1);
     // We add the characters to the write buffer
     abAppend(&ab, buf, strlen(buf));
 
