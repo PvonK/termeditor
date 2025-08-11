@@ -488,13 +488,15 @@ void drawRows(struct abuf *ab){
                 abAppend(ab, "~", 1);
             }
         }else{
-            // We get the size of the string we need to write
-            int len = E.row[filerow].size;
+            // We get the size of the string we need to write. It is the size of the row minus the sideways offset we get from scrolling to the side
+            int len = E.row[filerow].size - E.coloffset;
+            // If we scrolled too far right on one line we show 0 bytes from the ones we have scrolled past. We cap the value at 0
+            if (len < 0) len = 0;
             // We truncate the length of the string we will draw to the size of the screen
             if (len > E.screencols) len = E.screencols;
 
-            // We add the characters to the append buffer
-            abAppend(ab, E.row[filerow].chars, len);
+            // We add the characters to the append buffer. We only add the ones after the number indicated by the column offset
+            abAppend(ab, &E.row[filerow].chars[E.coloffset], len);
         }
 
         abAppend(ab, "\x1b[K", 3);
