@@ -51,6 +51,9 @@ struct editorConfig{
     // Offset between the file rows and the terminal rows
     int rowoffset;
 
+    // Offset for row characters that are shown
+    int coloffset;
+
     // Cursor position
     int cx, cy;
 
@@ -550,6 +553,7 @@ void initEditor(){
     E.cx = 0;
     E.cy = 0;
     E.rowoffset = 0;
+    E.coloffset = 0;
     E.numrows = 0;
     E.row = NULL;
 
