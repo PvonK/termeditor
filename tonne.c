@@ -372,6 +372,19 @@ void scroll(){
         E.rowoffset = E.cy - E.screenrows + 1;
     }
 
+    // If the cursor is to de left of the first character shown in the editor
+    if (E.cx < E.coloffset){
+        // We set the offset to the position of the cursor (scroll right)
+        E.coloffset = E.cx;
+    }
+
+    // if the cursor is lower than the offset and the length of the screen
+    if (E.cx >= E.coloffset + E.screencols){
+        // we set the offset to the offset + 1 (we do it in a convoluded way but thats essentialy what is happening). Pretty sure i could do coloffset++ and it would work
+        E.coloffset = E.cx - E.screencols + 1;
+    }
+
+
 }
 
 
