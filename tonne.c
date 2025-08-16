@@ -400,9 +400,8 @@ void moveCursor(int key){
             break;
         // Move right
         case ARROW_RIGHT:
-            if (E.cx != E.screencols-1){ // cant go right if we are at the furthest position (-1 because cx is 0 indexed)
-                E.cx++;
-            }
+	    // Can move right as much as you want, later i could add: if (E.cx < E.row[cy].size)
+            E.cx++;
             break;
         // Move up
         case ARROW_UP:
