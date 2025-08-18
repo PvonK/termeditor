@@ -396,7 +396,6 @@ void moveCursor(int key){
     // Also, apparently i forgot to change the arrow down conditional at some point I fucked up in step 69
     erow *row = (E.cy >= E.numrows) ? NULL : &E.row[E.cy];
 
-
     switch (key){
         // Move left
         case ARROW_LEFT:
@@ -420,7 +419,7 @@ void moveCursor(int key){
             break;
         // Move down
         case ARROW_DOWN:
-            if (E.cy != E.numrows-1){ // cant go down if we are at the bottom of the file (-1 because cx is 0 indexed)
+            if (E.cy < E.numrows){ // Can go one row lower than the last line on the file
                 E.cy++;
             }
             break;
