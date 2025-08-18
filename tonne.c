@@ -391,6 +391,12 @@ void scroll(){
 /*** Input ***/
 
 void moveCursor(int key){
+    // We check if the row position is farther down than the last line of the file, if it is we set the pointer to that line to NULL ¿?. If it isnt, we set the pointer to the corresponding pointer of the line at that index 
+    // this is for the cx movement, to check if the line has something, if it doesnt you cant move right
+    // Also, apparently i forgot to change the arrow down conditional at some point I fucked up in step 69
+    erow *row = (E.cy >= E.numrows) ? NULL : &E.row[E.cy];
+
+
     switch (key){
         // Move left
         case ARROW_LEFT:
@@ -400,8 +406,11 @@ void moveCursor(int key){
             break;
         // Move right
         case ARROW_RIGHT:
-	    // Can move right as much as you want, later i could add: if (E.cx < E.row[cy].size)
-            E.cx++;
+            // If row isnt null and cx is less than the length of the row we can move.
+            // (this is what i proposed on the last step but i proposed row.size, idk the difference between . and ->)
+            if (row && E.cx < row->size){
+                E.cx++;
+            }
             break;
         // Move up
         case ARROW_UP:
