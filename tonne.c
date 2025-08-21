@@ -401,7 +401,13 @@ void moveCursor(int key){
         case ARROW_LEFT:
             if (E.cx != 0){ // cant go left if cursor is on the left
                 E.cx--;
-            }
+	    // If the cursor is on the first column and not on the first line and left is pressed
+            } else if(E.cy > 0){
+		// we go one row up
+		E.cy--;
+		// we go to the end of the line
+		E.cx = E.row[E.cy].size;
+	    }
             break;
         // Move right
         case ARROW_RIGHT:
