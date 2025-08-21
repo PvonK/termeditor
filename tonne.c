@@ -424,6 +424,15 @@ void moveCursor(int key){
             }
             break;
     }
+
+    // We set row again since cy may have changed
+    row = (E.cy >= E.numrows) ? NULL : &E.row[E.cy];
+    // We get the legth of the row we are in (if it exists)
+    int rowlen = row ? row->size : 0;
+    // If we are too far right we snap back to the end of the line
+    if (E.cx > rowlen){
+	    E.cx = rowlen;
+    }
 }
 
 void processKeypress(){
