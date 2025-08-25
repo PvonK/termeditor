@@ -415,6 +415,11 @@ void moveCursor(int key){
             // (this is what i proposed on the last step but i proposed row.size, idk the difference between . and ->)
             if (row && E.cx < row->size){
                 E.cx++;
+            // If the row exists (we arent on the last row) and we are at the end of the line (TODO what is the difference between row.size and row->size)
+            }else if (row && E.cx == row->size){
+                // We move to the start of the next line
+                E.cy++;
+                E.cx = 0;
             }
             break;
         // Move up
