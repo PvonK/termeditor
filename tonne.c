@@ -40,6 +40,10 @@ enum editorKeys{
 typedef struct erow {
     int size;
     char *chars;
+
+    // Variables to define how special characters will be rendered
+    int rsize;
+    char *render;
 } erow;
 
 // Global state struct
@@ -284,6 +288,11 @@ void appendRow(char *s, size_t len){
 
     // We set the last character to a zero byte so it is interpreted as a string and not just as a collection of bytes
     E.row[at].chars[len] = '\0';
+
+
+    //We initialize the values for the special character rendering variables
+    E.row[at].rsize = 0;
+    E.row[at].render = NULL;
 
     // We increment the counter for the number of rows
     E.numrows++;
