@@ -265,6 +265,28 @@ int getWindowSize(int *rows, int *cols){
 
 /*** row operations ***/
 
+void updateRow(erow *row){
+
+    // We empty the contents of the render variable inside this row
+    free(row->render);
+
+    // We allocate the space to hold the whole row on the render var
+    row->render = malloc(row->size + 1);
+
+    // We copy the values from the row chars to the row render var
+    int j;
+    int idx = 0;
+    for (j=0;j<row->size;j++){
+        row->render[idx++] = row->chars[j];
+    }
+
+    // We set the last value of the render var to a zero byte
+    row->render[idx] = '\0';
+    // we set rsize to the length of the render var
+    row->rsize = idx;
+
+}
+
 void appendRow(char *s, size_t len){
 
     // We allocate enough space for the rows we need to write
@@ -293,6 +315,7 @@ void appendRow(char *s, size_t len){
     //We initialize the values for the special character rendering variables
     E.row[at].rsize = 0;
     E.row[at].render = NULL;
+    updateRow(&E.row[at]);
 
     // We increment the counter for the number of rows
     E.numrows++;
