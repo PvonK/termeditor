@@ -267,17 +267,34 @@ int getWindowSize(int *rows, int *cols){
 
 void updateRow(erow *row){
 
+    // We create a counter for the number of tabs in the row
+    int tabs = 0;
+    int j;
+    // We count the number of tabs on the row
+    for (j=0; j<row->size; j++){
+        if (row->chars[j] == '\t') tabs ++;
+    }
+
     // We empty the contents of the render variable inside this row
     free(row->render);
 
-    // We allocate the space to hold the whole row on the render var
-    row->render = malloc(row->size + 1);
+    // We allocate the space to hold the whole row on the render var and add the space for 7 more bytes for each tab
+    row->render = malloc(row->size + tabs*7 + 1);
 
     // We copy the values from the row chars to the row render var
-    int j;
     int idx = 0;
     for (j=0;j<row->size;j++){
-        row->render[idx++] = row->chars[j];
+        // If we are copying a tab characer
+        if (row->chars[j] == '\t'){
+            // We instead write the tab as spaces spaces
+            row->render[idx++] = ' ';
+            // We write spaces until the next column that is divisible by 8
+            while (idx%8 != 0) row->render[idx++] = ' ';
+        }else{
+            // otherwise, if the character is not rendered differently, we just copy it
+            row->render[idx++] = row->chars[j];
+        }
+
     }
 
     // We set the last value of the render var to a zero byte
