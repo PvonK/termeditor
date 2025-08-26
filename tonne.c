@@ -21,6 +21,8 @@
 
 #define TONNE_VERSION "0.0.1"
 
+#define TONNE_TAB_STOP 8
+
 enum editorKeys{
     ARROW_LEFT = 1000,
     ARROW_RIGHT,
@@ -278,8 +280,8 @@ void updateRow(erow *row){
     // We empty the contents of the render variable inside this row
     free(row->render);
 
-    // We allocate the space to hold the whole row on the render var and add the space for 7 more bytes for each tab
-    row->render = malloc(row->size + tabs*7 + 1);
+    // We allocate the space to hold the whole row on the render var and add the space for 7 (which is TONNE_TAB_STOP-1) more bytes for each tab
+    row->render = malloc(row->size + tabs*(TONNE_TAB_STOP-1) + 1);
 
     // We copy the values from the row chars to the row render var
     int idx = 0;
@@ -288,8 +290,8 @@ void updateRow(erow *row){
         if (row->chars[j] == '\t'){
             // We instead write the tab as spaces spaces
             row->render[idx++] = ' ';
-            // We write spaces until the next column that is divisible by 8
-            while (idx%8 != 0) row->render[idx++] = ' ';
+            // We write spaces until the next column that is divisible by TONNE_TAB_STOP(8)
+            while (idx%TONNE_TAB_STOP != 0) row->render[idx++] = ' ';
         }else{
             // otherwise, if the character is not rendered differently, we just copy it
             row->render[idx++] = row->chars[j];
