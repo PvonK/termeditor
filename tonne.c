@@ -62,6 +62,8 @@ struct editorConfig{
 
     // Cursor position
     int cx, cy;
+    // index for the position of the cursor inside the renderization of a row
+    int rx;
 
     // Number of rows
     int numrows;
@@ -646,6 +648,7 @@ void refreshScreen(){
 void initEditor(){
     E.cx = 0;
     E.cy = 0;
+    E.rx = 0;
     E.rowoffset = 0;
     E.coloffset = 0;
     E.numrows = 0;
