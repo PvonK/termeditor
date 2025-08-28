@@ -269,6 +269,22 @@ int getWindowSize(int *rows, int *cols){
 
 /*** row operations ***/
 
+int rowCxToRx(erow *row, int cx){
+
+    int rx = 0;
+    int j;
+    // we iterate the row up to the place the cursor is at
+    for (j = 0; j < cx; j++){
+        // If one of the characters before the cursor positon is a tab
+        if (row->chars[j] == '\t')
+            // We move rx forwards until the next column that is a multiple of 8 (assuming TAB_STOP is 8)
+            // We do this by adding 8 and then subtracting however much we are past the previous multiple of 8
+            rx += (TONNE_TAB_STOP-1) - (rx % TONNE_TAB_STOP);
+        rx++;
+    }
+    return rx;
+}
+
 void updateRow(erow *row){
 
     // We create a counter for the number of tabs in the row
