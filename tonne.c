@@ -280,6 +280,7 @@ int rowCxToRx(erow *row, int cx){
             // We move rx forwards until the next column that is a multiple of 8 (assuming TAB_STOP is 8)
             // We do this by adding 8 and then subtracting however much we are past the previous multiple of 8
             rx += (TONNE_TAB_STOP-1) - (rx % TONNE_TAB_STOP);
+        // We add one to rx (this is why we subtract one from tabstop on the if, because this always adds one afterwards)
         rx++;
     }
     return rx;
@@ -428,7 +429,12 @@ void abFree(struct abuf *ab){
 
 /*** Output ***/
 void scroll(){
-    E.rx = E.cx;
+    E.rx = 0;
+    // If we are in a line that is not NONE
+    if (E.cy < E.numrows){
+        // We set rx to its value according to the number of tabs and the position of the cursor
+        E.rx = rowCxToRx(&E.row[E.cy], E.cx);
+    }
 
     // If the cursor is above the first line shown in the editor
     if (E.cy < E.rowoffset){
