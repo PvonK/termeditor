@@ -628,6 +628,8 @@ void drawRows(struct abuf *ab){
         }
 
         abAppend(ab, "\x1b[K", 3);
+
+        // Add a line at the end of the file so we can move the cursor under the last line
         if (y < E.screenrows-1){
             abAppend(ab, "\r\n", 2);
         }
