@@ -540,7 +540,11 @@ void processKeypress(){
             break;
         // End key moves the cursor to the last column
         case END_KEY:
-            E.cx = E.screencols-1;
+            // If the cursor id not on the last (non existing) line
+            if (E.cy < E.numrows){
+                // We move the cursor to the last element of the line we are on
+                E.cx = E.row[E.cy].size;
+            }
             break;
 
         // For the page up and page down keys
