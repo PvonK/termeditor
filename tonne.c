@@ -630,9 +630,9 @@ void drawRows(struct abuf *ab){
         abAppend(ab, "\x1b[K", 3);
 
         // Add a line at the end of the file so we can move the cursor under the last line
-        if (y < E.screenrows-1){
+        //if (y < E.screenrows-1){  // we removed this if so that there is an empty newline at the bottom of the teminal all the time. For the status bar
             abAppend(ab, "\r\n", 2);
-        }
+        //}
     }
 }
 
@@ -692,6 +692,7 @@ void initEditor(){
     E.row = NULL;
 
     if (getWindowSize(&E.screenrows, &E.screencols) == -1) die("getWindowSize");
+    E.screenrows --;
 }
 
 // Main has 2 parameters to handle arguments
