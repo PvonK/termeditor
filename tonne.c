@@ -547,6 +547,14 @@ void processKeypress(){
         case PAGE_UP:
         case PAGE_DOWN:
             {
+                // We move the cursor to the edge of the screen before we move the cursor for one full page
+                if (c == PAGE_UP){
+                    E.cy = E.rowoffset;
+                }else if (c == PAGE_DOWN){
+                    E.cy = E.rowoffset + E.screenrows - 1;
+                    if (E.cy > E.numrows) E.cy = E.numrows;
+                }
+
                 // We run a loop for as many rows as the terminal has
                 int times = E.screenrows;
                 while (times--)
