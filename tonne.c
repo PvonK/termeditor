@@ -648,11 +648,14 @@ void drawStatusBar(struct abuf *ab){
     // We write an escape sequence that switches to inverted colors
     abAppend(ab, "\x1b[7m", 4);
 
-    // We create a string to hold the status of the file
-    char status[80];
+    // We create a string to hold the status of the file and another to keep the status that will be written on the right side of the screen
+    char status[80], rstatus[80];
     // We set the status to the filename and number of lines on the file if there is one
     // If there is no file, we set the status to "[No Name]"
     int len = snprintf(status, sizeof(status), "%.20s - %d lines", E.filename ? E.filename : "[No Name]", E.numrows);
+
+    // We write to rstatus the numberline we are on
+    int rlen = snprintf(rstatus, sizeof(rstatus), "%d/%d", E.cy+1, E.numrows);
 
     // if the length of the status message is too big for the screen we cut it off
     if (len > E.screencols) len = E.screencols;
@@ -662,9 +665,17 @@ void drawStatusBar(struct abuf *ab){
 
     // We iterate for all the remaining columns on the screen
     while (len < E.screencols){
-        // We add a space
-        abAppend(ab, " ", 1);
-        len++;
+        // If we have exactly the space needed for the right status
+        if (E.screencols - len == rlen){
+            // We write the right status
+            abAppend(ab, rstatus, rlen);
+            // We exit the loop since we finished drawing the status bar
+            break;
+        }else{
+            // We add a space
+            abAppend(ab, " ", 1);
+            len++;
+        }
     }
     // We switch back to normal colors
     abAppend(ab, "\x1b[m", 3);
