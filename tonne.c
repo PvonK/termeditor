@@ -636,6 +636,21 @@ void drawRows(struct abuf *ab){
     }
 }
 
+// Function to draw the status bar at the bottom of the screen
+void drawStatusBar(struct abuf *ab){
+
+    // We write an escape sequence that switches to inverted colors
+    abAppend(ab, "\x1b[7m", 4);
+    // We iterate for all columns on the screen
+    int len = 0;
+    while (len < E.screencols){
+        // We add a space
+        abAppend(ab, " ", 1);
+        len++;
+    }
+    // We switch back to normal colors
+    abAppend(ab, "\x1b[m", 3);
+}
 
 void refreshScreen(){
     scroll();
@@ -658,6 +673,7 @@ void refreshScreen(){
     abAppend(&ab, "\x1b[H", 3);
 
     drawRows(&ab);
+    drawStatusBar(&ab);
 
     // We create a character array
     char buf[32];
