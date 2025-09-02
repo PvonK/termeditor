@@ -70,6 +70,8 @@ struct editorConfig{
 
     // A pointer to the first row of text to be displayed
     erow *row;
+    // Name of the open file
+    char *filename;
 
     struct termios original_termios;
 };
@@ -364,6 +366,10 @@ void appendRow(char *s, size_t len){
 /*** file i/o ***/
 
 void openFile(char *filename){
+    // We save the filename to a string
+    free(E.filename);
+    E.filename = strdup(filename);
+
     // We create a pointer to the file chosen
     // TODO research what `FILE` is
     FILE *fp = fopen(filename, "r");
@@ -706,6 +712,7 @@ void initEditor(){
     E.coloffset = 0;
     E.numrows = 0;
     E.row = NULL;
+    E.filename = NULL;
 
     if (getWindowSize(&E.screenrows, &E.screencols) == -1) die("getWindowSize");
     E.screenrows --;
