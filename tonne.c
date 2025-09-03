@@ -690,6 +690,20 @@ void drawStatusBar(struct abuf *ab){
     abAppend(ab, "\r\n", 2);
 }
 
+void drawMessageBar(struct abuf *ab){
+
+    // We clear the message bar
+    abAppend(ab, "\x1b[K", 3);
+    // We set the length of the message to either the length of the string to write or the maximum length of the terminal
+    int msglen = strlen(E.statusmsg);
+    if (msglen > E.screencols) msglen = E.screencols;
+    // if there is a message and it has been less than 5 seconds since the message was set
+    if (msglen && time(NULL) - E.statusmsg_time < 5)
+        // We write the message
+        abAppend(ab, E.statusmsg, msglen);
+
+}
+
 void refreshScreen(){
     scroll();
     // we initiate an append buffer
@@ -712,6 +726,7 @@ void refreshScreen(){
 
     drawRows(&ab);
     drawStatusBar(&ab);
+    drawMessageBar(&ab);
 
     // We create a character array
     char buf[32];
