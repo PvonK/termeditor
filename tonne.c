@@ -494,7 +494,7 @@ void moveCursor(int key){
         // Move right
         case ARROW_RIGHT:
             // If row isnt null and cx is less than the length of the row we can move.
-            // (this is what i proposed on the last step but i proposed row.size, idk the difference between . and ->)
+            // (this is what i proposed on the last step but i proposed row.size, idk the difference between . and ->)(-> is used when accessing a propriety from a pointer, the "." is used when referincing the variable directly)
             if (row && E.cx < row->size){
                 E.cx++;
             // If the row exists (we arent on the last row) and we are at the end of the line (TODO what is the difference between row.size and row->size)
