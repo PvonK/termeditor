@@ -686,6 +686,8 @@ void drawStatusBar(struct abuf *ab){
     }
     // We switch back to normal colors
     abAppend(ab, "\x1b[m", 3);
+    // We add another line
+    abAppend(ab, "\r\n", 2);
 }
 
 void refreshScreen(){
@@ -763,6 +765,8 @@ void initEditor(){
     E.statusmsg_time = 0;
 
     if (getWindowSize(&E.screenrows, &E.screencols) == -1) die("getWindowSize");
+    // We remove 2 rows from the total available in the terminal so we have space for the status bar
+    E.screenrows --;
     E.screenrows --;
 }
 
