@@ -13,6 +13,7 @@
 #include <termios.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <time.h>
 
 
 /*** Defines ***/
@@ -74,6 +75,11 @@ struct editorConfig{
     char *filename;
 
     struct termios original_termios;
+
+    // status bar message string
+    char statusmsg[80];
+    // status bar message timeout
+    time_t statusmsg_time;
 };
 
 struct editorConfig E;
@@ -736,6 +742,8 @@ void initEditor(){
     E.numrows = 0;
     E.row = NULL;
     E.filename = NULL;
+    E.statusmsg[0] = '\0';
+    E.statusmsg_time = 0;
 
     if (getWindowSize(&E.screenrows, &E.screencols) == -1) die("getWindowSize");
     E.screenrows --;
