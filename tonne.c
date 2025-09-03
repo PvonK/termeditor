@@ -14,6 +14,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <time.h>
+#include <stdarg.h>
 
 
 /*** Defines ***/
@@ -730,6 +731,22 @@ void refreshScreen(){
 
 }
 
+void setStatusMessage(const char *fmt, ...){
+
+    // Since this is a variadic function (determined by the '...')
+    // We need to define a va_list to hold the pointer to the start of all the arguments passed to the function
+    va_list ap;
+    // We define the start of the parameter list as starting from the position of fmt
+    va_start(ap, fmt);
+    // We set E.statusmsg to all the strings entered as parameters
+    vsnprintf(E.statusmsg, sizeof(E.statusmsg), fmt, ap);
+    // We no longer use the parameters
+    va_end(ap);
+    // We set statusmsg_time to the current time
+    E.statusmsg_time = time(NULL);
+
+}
+
 
 /*** Init ***/
 
@@ -758,6 +775,8 @@ int main(int argc, char *argv[]){
     if (argc >= 2){
         openFile(argv[1]);
     }
+
+    setStatusMessage("HELP: Ctrl+Q = quit");
 
     // while always
     while (1){
