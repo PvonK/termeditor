@@ -369,6 +369,22 @@ void appendRow(char *s, size_t len){
 
 }
 
+void insertCharToRow(erow *row, int at, int c){
+
+    // We cap the position of the position we can add characters
+    if (at < 0 || at > row->size) at = row->size;
+    // We add 2 bytes to the string (one for the new character and one for the nullbyte)(row.size doesnt account for the nullbyte but the memory allocation does)
+    row->chars = realloc(row->chars, row->size+2);
+    // move the characters from "at" position to the end of the row one position forward
+    memmove(&row->chars[at+1], &row->chars[at], row->size - at + 1);
+    // we increase the var hoilding the size of the row
+    row->size++;
+    // We set the character at the "at" position to the value of "c"
+    row->chars[at] = c;
+    // We update the display of the row
+    updateRow(row);
+
+}
 
 /*** file i/o ***/
 
