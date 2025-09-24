@@ -622,6 +622,9 @@ void processKeypress(){
         case ARROW_DOWN:
             moveCursor(c);
             break;
+        default:
+            insertChar(c);
+            break;
     }
 }
 
