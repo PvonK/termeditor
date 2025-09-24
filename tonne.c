@@ -386,6 +386,24 @@ void insertCharToRow(erow *row, int at, int c){
 
 }
 
+
+/*** editor operations ***/
+
+void insertChar(int c){
+
+    // If the cursor is at the end of the file
+    if (E.cy == E.numrows){
+        // We add a new line at the end
+        appendRow("", 0);
+    }
+    // We add the character on the row we are in
+    insertCharToRow(&E.row[E.cy], E.cx, c);
+    // We move the cursor forward
+    E.cx++;
+
+}
+
+
 /*** file i/o ***/
 
 void openFile(char *filename){
